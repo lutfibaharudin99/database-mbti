@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBTI Cognitive Function Explorer</title>
+    <title>MBTI Master - Test & Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,6 +12,12 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+
+        .nav-link.active {
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
         }
 
         .glass-card {
@@ -20,18 +26,18 @@
             border: 1px solid rgba(229, 231, 235, 0.5);
         }
 
-        .function-node {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
         }
 
-        .function-node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        .view-section.active {
+            display: block;
         }
 
-        .tab-active {
-            border-bottom: 3px solid #4f46e5;
-            color: #4f46e5;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .mbti-btn {
@@ -41,348 +47,482 @@
         .mbti-btn:active {
             transform: scale(0.95);
         }
+
+        .radio-custom:checked + label {
+            border-color: #4f46e5;
+            background-color: #f5f3ff;
+            color: #4f46e5;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="text-slate-900">
 
-    <!-- Navigation -->
-    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('home')">
                     <div class="bg-indigo-600 p-2 rounded-lg text-white">
                         <i class="fas fa-brain"></i>
                     </div>
-                    <span class="text-xl font-bold tracking-tight text-slate-800">MBTI Logic</span>
+                    <span class="text-xl font-bold tracking-tight text-slate-800">MBTI Master</span>
                 </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#judging" class="text-sm font-medium text-slate-600 hover:text-indigo-600">Judging</a>
-                    <a href="#perceiving" class="text-sm font-medium text-slate-600 hover:text-indigo-600">Perceiving</a>
-                    <a href="#stack" class="text-sm font-medium text-slate-600 hover:text-indigo-600">Function Stack</a>
+                <div class="flex space-x-6">
+                    <button onclick="switchView('learn')" id="nav-learn" class="nav-link text-sm font-medium text-slate-600 hover:text-indigo-600 py-2">Kamus</button>
+                    <button onclick="switchView('test')" id="nav-test" class="nav-link text-sm font-medium text-slate-600 hover:text-indigo-600 py-2">Tes MBTI</button>
+                    <button onclick="switchView('stack')" id="nav-stack" class="nav-link text-sm font-medium text-slate-600 hover:text-indigo-600 py-2">Visualizer</button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="py-16 px-4 bg-white border-b border-slate-100">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-                Database Fungsi Kognitif <span class="text-indigo-600">Mendalam</span>
-            </h1>
-            <p class="text-lg text-slate-600 leading-relaxed">
-                Pahami mekanisme di balik bagaimana otak manusia mengambil informasi dan membuat keputusan berdasarkan teori Carl Jung dan Myers-Briggs.
+    <!-- Content Sections -->
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+        <!-- VIEW: HOME/HERO -->
+        <section id="view-home" class="view-section active py-16 text-center">
+            <h1 class="text-5xl font-extrabold text-slate-900 mb-6">Temukan <span class="text-indigo-600">Jati Dirimu</span></h1>
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Platform lengkap untuk memahami 16 tipe kepribadian melalui kacamata Fungsi Kognitif Carl Jung.
             </p>
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        
-        <!-- Judging Section -->
-        <section id="judging" class="mb-20">
-            <div class="flex items-center gap-4 mb-8">
-                <h2 class="text-2xl font-bold text-slate-800">1. Fungsi Judging</h2>
-                <span class="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full uppercase">Pengambil Keputusan</span>
+            <div class="flex justify-center gap-4">
+                <button onclick="switchView('test')" class="px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg hover:bg-indigo-700 transition">Mulai Tes Gratis</button>
+                <button onclick="switchView('learn')" class="px-8 py-3 bg-white border border-slate-200 text-slate-700 rounded-full font-bold hover:bg-slate-50 transition">Pelajari Teori</button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <i class="fas fa-microscope text-3xl text-indigo-500 mb-4"></i>
+                    <h3 class="text-lg font-bold mb-2">Akurasi Fungsi</h3>
+                    <p class="text-sm text-slate-500">Tes kami didasarkan pada urutan fungsi kognitif (Ni, Te, Fi, Se), bukan sekadar dikotomi huruf.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <i class="fas fa-layer-group text-3xl text-emerald-500 mb-4"></i>
+                    <h3 class="text-lg font-bold mb-2">Visualizer 16 Tipe</h3>
+                    <p class="text-sm text-slate-500">Eksplorasi visual tumpukan fungsi untuk semua 16 tipe kepribadian Myers-Briggs.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <i class="fas fa-book-open text-3xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-bold mb-2">Kamus Lengkap</h3>
+                    <p class="text-sm text-slate-500">Penjelasan mendalam mengenai 8 fungsi kognitif yang menggerakkan perilaku manusia.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: LEARN (KAMUS) -->
+        <section id="view-learn" class="view-section">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">Kamus Fungsi Kognitif</h2>
+                <p class="text-slate-500">Memahami 8 "proses mental" dasar manusia.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- JUDGING -->
+                <div class="col-span-full border-b border-slate-200 pb-2 mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Judging Functions (Evaluasi)</span>
+                </div>
                 <!-- Te -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-indigo-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-indigo-600">Te</span>
-                        <i class="fas fa-project-diagram text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Extroverted Thinking</h3>
-                    <p class="text-sm text-slate-600 mb-4">Fokus pada efisiensi, logika objektif, dan hasil di dunia luar.</p>
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-indigo-400"></i>
-                            <span>Membuat sistem & spreadsheet</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-indigo-400"></i>
-                            <span>Berorientasi pada target nyata</span>
-                        </div>
-                    </div>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-indigo-500">
+                    <span class="text-2xl font-black text-indigo-600">Te</span>
+                    <h3 class="font-bold mt-2">Extraverted Thinking</h3>
+                    <p class="text-xs text-slate-500 mt-2">Logika objektif, keteraturan dunia luar, efisiensi, dan sistem.</p>
                 </div>
-
                 <!-- Ti -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-blue-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-blue-600">Ti</span>
-                        <i class="fas fa-microscope text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Introverted Thinking</h3>
-                    <p class="text-sm text-slate-600 mb-4">Menganalisis kerangka logika internal dan akurasi sistem.</p>
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-blue-400"></i>
-                            <span>Memahami "cara kerja" sesuatu</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-blue-400"></i>
-                            <span>Sangat presisi dalam bahasa</span>
-                        </div>
-                    </div>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-blue-500">
+                    <span class="text-2xl font-black text-blue-600">Ti</span>
+                    <h3 class="font-bold mt-2">Introverted Thinking</h3>
+                    <p class="text-xs text-slate-500 mt-2">Logika internal, presisi, cara kerja sesuatu, dan kerangka teori.</p>
                 </div>
-
                 <!-- Fe -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-emerald-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-emerald-600">Fe</span>
-                        <i class="fas fa-users text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Extroverted Feeling</h3>
-                    <p class="text-sm text-slate-600 mb-4">Fokus pada harmoni sosial dan nilai-nilai kelompok.</p>
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-emerald-400"></i>
-                            <span>Menjaga kedamaian suasana</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-emerald-400"></i>
-                            <span>Peka terhadap perasaan orang lain</span>
-                        </div>
-                    </div>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-emerald-500">
+                    <span class="text-2xl font-black text-emerald-600">Fe</span>
+                    <h3 class="font-bold mt-2">Extraverted Feeling</h3>
+                    <p class="text-xs text-slate-500 mt-2">Harmoni sosial, nilai kelompok, empati, dan etika eksternal.</p>
                 </div>
-
                 <!-- Fi -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-rose-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-rose-600">Fi</span>
-                        <i class="fas fa-heart text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Introverted Feeling</h3>
-                    <p class="text-sm text-slate-600 mb-4">Fokus pada nilai personal dan autentisitas internal.</p>
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-rose-400"></i>
-                            <span>Sangat setia pada prinsip diri</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-slate-500">
-                            <i class="fas fa-check-circle mt-1 text-rose-400"></i>
-                            <span>Menghargai kejujuran emosi</span>
-                        </div>
-                    </div>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-rose-500">
+                    <span class="text-2xl font-black text-rose-600">Fi</span>
+                    <h3 class="font-bold mt-2">Introverted Feeling</h3>
+                    <p class="text-xs text-slate-500 mt-2">Nilai personal, autentisitas, moralitas dalam diri, dan identitas.</p>
                 </div>
-            </div>
-        </section>
 
-        <!-- Perceiving Section -->
-        <section id="perceiving" class="mb-20">
-            <div class="flex items-center gap-4 mb-8">
-                <h2 class="text-2xl font-bold text-slate-800">2. Fungsi Perceiving</h2>
-                <span class="px-3 py-1 bg-cyan-100 text-cyan-700 text-xs font-bold rounded-full uppercase">Pengambil Informasi</span>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- PERCEIVING -->
+                <div class="col-span-full border-b border-slate-200 pb-2 mb-4 mt-6">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Perceiving Functions (Observasi)</span>
+                </div>
                 <!-- Se -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-orange-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-orange-600">Se</span>
-                        <i class="fas fa-camera text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Extroverted Sensing</h3>
-                    <p class="text-sm text-slate-600 mb-4">Fokus pada data sensorik saat ini dan aksi fisik langsung.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-orange-500">
+                    <span class="text-2xl font-black text-orange-600">Se</span>
+                    <h3 class="font-bold mt-2">Extraverted Sensing</h3>
+                    <p class="text-xs text-slate-500 mt-2">Realitas fisik, momen sekarang, aksi, dan detail panca indra.</p>
                 </div>
-
                 <!-- Si -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-slate-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-slate-600">Si</span>
-                        <i class="fas fa-database text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Introverted Sensing</h3>
-                    <p class="text-sm text-slate-600 mb-4">Fokus pada memori detail, pengalaman masa lalu, dan tradisi.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-slate-500">
+                    <span class="text-2xl font-black text-slate-600">Si</span>
+                    <h3 class="font-bold mt-2">Introverted Sensing</h3>
+                    <p class="text-xs text-slate-500 mt-2">Memori, tradisi, stabilitas, dan perbandingan dengan masa lalu.</p>
                 </div>
-
                 <!-- Ne -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-purple-500">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-purple-600">Ne</span>
-                        <i class="fas fa-lightbulb text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Extroverted Intuition</h3>
-                    <p class="text-sm text-slate-600 mb-4">Mengeksplorasi sejuta kemungkinan dan pola ide di luar.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-purple-500">
+                    <span class="text-2xl font-black text-purple-600">Ne</span>
+                    <h3 class="font-bold mt-2">Extraverted Intuition</h3>
+                    <p class="text-xs text-slate-500 mt-2">Kemungkinan, pola eksternal, brainstorming, dan ide abstrak.</p>
                 </div>
-
                 <!-- Ni -->
-                <div class="glass-card p-6 rounded-2xl function-node border-l-4 border-violet-800">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-black text-violet-800">Ni</span>
-                        <i class="fas fa-eye text-slate-300"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Introverted Intuition</h3>
-                    <p class="text-sm text-slate-600 mb-4">Fokus pada visi jangka panjang dan makna bawah sadar.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-violet-800">
+                    <span class="text-2xl font-black text-violet-800">Ni</span>
+                    <h3 class="font-bold mt-2">Introverted Intuition</h3>
+                    <p class="text-xs text-slate-500 mt-2">Visi masa depan, makna mendalam, fokus tunggal, dan insting.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Dynamic Stack Visualizer -->
-        <section id="stack" class="bg-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl overflow-hidden relative">
-            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div>
-                    <h2 class="text-3xl font-bold mb-6">Visualisasi Function Stack (16 Tipe)</h2>
-                    <p class="text-slate-400 mb-8 leading-relaxed">
-                        Pilih tipe kepribadian untuk melihat bagaimana fungsi kognitif tersusun dalam urutan prioritas.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <!-- Analyst Group -->
-                        <div>
-                            <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-3">Analysts</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="updateStack('INTJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-indigo-600 rounded-lg text-xs font-bold">INTJ</button>
-                                <button onclick="updateStack('INTP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-indigo-600 rounded-lg text-xs font-bold">INTP</button>
-                                <button onclick="updateStack('ENTJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-indigo-600 rounded-lg text-xs font-bold">ENTJ</button>
-                                <button onclick="updateStack('ENTP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-indigo-600 rounded-lg text-xs font-bold">ENTP</button>
-                            </div>
-                        </div>
-
-                        <!-- Diplomat Group -->
-                        <div>
-                            <p class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-3">Diplomats</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="updateStack('INFJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 rounded-lg text-xs font-bold">INFJ</button>
-                                <button onclick="updateStack('INFP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 rounded-lg text-xs font-bold">INFP</button>
-                                <button onclick="updateStack('ENFJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 rounded-lg text-xs font-bold">ENFJ</button>
-                                <button onclick="updateStack('ENFP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 rounded-lg text-xs font-bold">ENFP</button>
-                            </div>
-                        </div>
-
-                        <!-- Sentinel Group -->
-                        <div>
-                            <p class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Sentinels</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="updateStack('ISTJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-blue-600 rounded-lg text-xs font-bold">ISTJ</button>
-                                <button onclick="updateStack('ISFJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-blue-600 rounded-lg text-xs font-bold">ISFJ</button>
-                                <button onclick="updateStack('ESTJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-blue-600 rounded-lg text-xs font-bold">ESTJ</button>
-                                <button onclick="updateStack('ESFJ')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-blue-600 rounded-lg text-xs font-bold">ESFJ</button>
-                            </div>
-                        </div>
-
-                        <!-- Explorer Group -->
-                        <div>
-                            <p class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">Explorers</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="updateStack('ISTP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-amber-600 rounded-lg text-xs font-bold">ISTP</button>
-                                <button onclick="updateStack('ISFP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-amber-600 rounded-lg text-xs font-bold">ISFP</button>
-                                <button onclick="updateStack('ESTP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-amber-600 rounded-lg text-xs font-bold">ESTP</button>
-                                <button onclick="updateStack('ESFP')" class="mbti-btn px-3 py-1.5 bg-slate-800 hover:bg-amber-600 rounded-lg text-xs font-bold">ESFP</button>
-                            </div>
+        <!-- VIEW: TEST -->
+        <section id="view-test" class="view-section max-w-3xl mx-auto">
+            <div id="test-container" class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-100">
+                <div id="test-intro">
+                    <h2 class="text-3xl font-bold mb-4">Tes Fungsi Kognitif</h2>
+                    <p class="text-slate-600 mb-8 italic">Pilihlah jawaban yang paling menggambarkan dirimu dalam keseharian, bukan siapa yang kamu inginkan.</p>
+                    <button onclick="startTest()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition shadow-lg">Mulai Tes (20 Pertanyaan)</button>
+                </div>
+                
+                <div id="test-questions" class="hidden">
+                    <div class="flex justify-between items-center mb-8">
+                        <span id="progress-text" class="text-xs font-bold text-indigo-600 uppercase">Pertanyaan 1/20</span>
+                        <div class="w-2/3 h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-300" style="width: 5%"></div>
                         </div>
                     </div>
-
-                    <div id="type-description" class="p-6 mt-8 bg-slate-800/50 rounded-2xl border border-slate-700">
-                        <h4 id="display-type-name" class="text-xl font-bold mb-2 text-indigo-300">Pilih Tipe</h4>
-                        <p id="display-type-desc" class="text-slate-400 text-sm leading-relaxed italic">Klik salah satu tombol di atas untuk menganalisis strukturnya.</p>
+                    
+                    <div id="question-content" class="min-h-[200px]">
+                        <h3 id="question-text" class="text-xl font-bold text-slate-800 mb-8 leading-relaxed">Loading pertanyaan...</h3>
+                        <div id="options-container" class="space-y-3">
+                            <!-- Options injected here -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-4">
-                    <!-- The Stack Display -->
-                    <div id="stack-display" class="space-y-4">
-                        <!-- Dominant -->
-                        <div class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-indigo-500">
+                <div id="test-results" class="hidden text-center">
+                    <div class="mb-6">
+                        <div class="inline-block p-4 bg-indigo-50 rounded-full text-indigo-600 mb-4">
+                            <i class="fas fa-certificate text-4xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">Hasil Tes Kamu:</h2>
+                        <h1 id="result-type" class="text-6xl font-black text-indigo-600 my-4">INTJ</h1>
+                        <p id="result-name" class="text-xl font-medium text-slate-700 mb-8">The Architect</p>
+                    </div>
+                    <button onclick="viewTypeDetails()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold mb-3">Lihat Visualisasi Stack</button>
+                    <button onclick="resetTest()" class="text-sm text-slate-400 hover:text-indigo-600 font-medium">Ulangi Tes</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: STACK VISUALIZER -->
+        <section id="view-stack" class="view-section">
+            <div class="bg-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-6">Visualisasi Tumpukan Fungsi</h2>
+                        <p class="text-slate-400 mb-8 text-sm">Pilih tipe kepribadian untuk melihat struktur proses mentalnya.</p>
+                        
+                        <div class="grid grid-cols-4 gap-2 mb-8">
+                            <!-- Grouped by MBTI Types -->
+                            <div class="col-span-full text-[10px] text-indigo-400 font-bold uppercase mb-1">Analyst</div>
+                            <button onclick="updateStack('INTJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-indigo-600 transition">INTJ</button>
+                            <button onclick="updateStack('INTP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-indigo-600 transition">INTP</button>
+                            <button onclick="updateStack('ENTJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-indigo-600 transition">ENTJ</button>
+                            <button onclick="updateStack('ENTP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-indigo-600 transition">ENTP</button>
+
+                            <div class="col-span-full text-[10px] text-emerald-400 font-bold uppercase mt-4 mb-1">Diplomat</div>
+                            <button onclick="updateStack('INFJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-emerald-600 transition">INFJ</button>
+                            <button onclick="updateStack('INFP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-emerald-600 transition">INFP</button>
+                            <button onclick="updateStack('ENFJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-emerald-600 transition">ENFJ</button>
+                            <button onclick="updateStack('ENFP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-emerald-600 transition">ENFP</button>
+
+                            <div class="col-span-full text-[10px] text-blue-400 font-bold uppercase mt-4 mb-1">Sentinel</div>
+                            <button onclick="updateStack('ISTJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-blue-600 transition">ISTJ</button>
+                            <button onclick="updateStack('ISFJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-blue-600 transition">ISFJ</button>
+                            <button onclick="updateStack('ESTJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-blue-600 transition">ESTJ</button>
+                            <button onclick="updateStack('ESFJ')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-blue-600 transition">ESFJ</button>
+
+                            <div class="col-span-full text-[10px] text-amber-400 font-bold uppercase mt-4 mb-1">Explorer</div>
+                            <button onclick="updateStack('ISTP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-amber-600 transition">ISTP</button>
+                            <button onclick="updateStack('ISFP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-amber-600 transition">ISFP</button>
+                            <button onclick="updateStack('ESTP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-amber-600 transition">ESTP</button>
+                            <button onclick="updateStack('ESFP')" class="mbti-btn py-2 bg-slate-800 rounded-lg text-xs font-bold hover:bg-amber-600 transition">ESFP</button>
+                        </div>
+                    </div>
+
+                    <div id="stack-container" class="space-y-4">
+                        <div class="text-center mb-6">
+                            <h3 id="vis-type" class="text-4xl font-black text-white">??</h3>
+                            <p id="vis-name" class="text-slate-400 italic">Pilih tipe kepribadian</p>
+                        </div>
+                        
+                        <div id="vis-dom" class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-indigo-500">
                             <div class="w-12 text-[10px] font-bold text-slate-500 uppercase">Dom</div>
-                            <div id="stack-dom-tag" class="w-12 text-center bg-indigo-600 px-2 py-1 rounded text-sm font-black">??</div>
-                            <div id="stack-dom-name" class="text-sm font-medium text-slate-200">Fungsi Utama</div>
+                            <div class="func-tag w-12 text-center bg-indigo-600 px-2 py-1 rounded text-sm font-black">??</div>
+                            <div class="func-desc text-sm font-medium text-slate-200">Fungsi Utama</div>
                         </div>
-                        <!-- Aux -->
-                        <div class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-blue-400">
+                        <div id="vis-aux" class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-blue-400">
                             <div class="w-12 text-[10px] font-bold text-slate-500 uppercase">Aux</div>
-                            <div id="stack-aux-tag" class="w-12 text-center bg-blue-500 px-2 py-1 rounded text-sm font-black">??</div>
-                            <div id="stack-aux-name" class="text-sm font-medium text-slate-200">Fungsi Pendukung</div>
+                            <div class="func-tag w-12 text-center bg-blue-500 px-2 py-1 rounded text-sm font-black">??</div>
+                            <div class="func-desc text-sm font-medium text-slate-200">Fungsi Pendukung</div>
                         </div>
-                        <!-- Tert -->
-                        <div class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-emerald-400">
+                        <div id="vis-tert" class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-emerald-400">
                             <div class="w-12 text-[10px] font-bold text-slate-500 uppercase">Tert</div>
-                            <div id="stack-tert-tag" class="w-12 text-center bg-emerald-500 px-2 py-1 rounded text-sm font-black">??</div>
-                            <div id="stack-tert-name" class="text-sm font-medium text-slate-200">Fungsi Bermain</div>
+                            <div class="func-tag w-12 text-center bg-emerald-500 px-2 py-1 rounded text-sm font-black">??</div>
+                            <div class="func-desc text-sm font-medium text-slate-200">Fungsi Bermain</div>
                         </div>
-                        <!-- Inf -->
-                        <div class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-rose-500">
+                        <div id="vis-inf" class="flex items-center gap-4 bg-slate-800 p-4 rounded-xl border-l-8 border-rose-500">
                             <div class="w-12 text-[10px] font-bold text-slate-500 uppercase">Inf</div>
-                            <div id="stack-inf-tag" class="w-12 text-center bg-rose-500 px-2 py-1 rounded text-sm font-black">??</div>
-                            <div id="stack-inf-name" class="text-sm font-medium text-slate-200">Titik Lemah</div>
+                            <div class="func-tag w-12 text-center bg-rose-500 px-2 py-1 rounded text-sm font-black">??</div>
+                            <div class="func-desc text-sm font-medium text-slate-200">Fungsi Kelemahan</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Background Decoration -->
-            <div class="absolute -bottom-20 -right-20 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl"></div>
         </section>
 
     </main>
 
-    <footer class="bg-white border-t border-slate-200 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-500 text-sm">Dibuat khusus untuk eksplorasi detail fungsi kognitif.</p>
-        </div>
-    </footer>
-
     <script>
+        // DATA: MBTI 16 Types
         const mbtiData = {
-            // Analysts
-            'INTJ': { name: 'Architect', desc: 'Pemikir strategis dengan visi tajam untuk masa depan.', stack: ['Ni', 'Te', 'Fi', 'Se'], labels: ['Visi Jangka Panjang', 'Strategi Efisien', 'Nilai Internal', 'Kesadaran Fisik'] },
-            'INTP': { name: 'Logician', desc: 'Pemikir logis yang haus akan pengetahuan dan sistem.', stack: ['Ti', 'Ne', 'Si', 'Fe'], labels: ['Analisis Sistem', 'Koneksi Ide', 'Penyimpan Data', 'Harmoni Sosial'] },
-            'ENTJ': { name: 'Commander', desc: 'Pemimpin berani yang pandai mengatur strategi organisasi.', stack: ['Te', 'Ni', 'Se', 'Fi'], labels: ['Eksekusi Efisien', 'Visi Strategis', 'Aksi Nyata', 'Prinsip Diri'] },
-            'ENTP': { name: 'Debater', desc: 'Pemikir cerdas yang senang mengeksplorasi tantangan intelektual.', stack: ['Ne', 'Ti', 'Fe', 'Si'], labels: ['Kemungkinan Tak Terbatas', 'Logika Kerangka', 'Adaptasi Sosial', 'Detail Memori'] },
-            
-            // Diplomats
-            'INFJ': { name: 'Advocate', desc: 'Idealistis dan mistis, namun sangat terorganisir.', stack: ['Ni', 'Fe', 'Ti', 'Se'], labels: ['Wawasan Dalam', 'Empati Kelompok', 'Logika Internal', 'Respon Lingkungan'] },
-            'INFP': { name: 'Mediator', desc: 'Pribadi yang puitis, baik hati, dan altruistik.', stack: ['Fi', 'Ne', 'Si', 'Te'], labels: ['Autentisitas Diri', 'Kemungkinan Kreatif', 'Pengalaman Masa Lalu', 'Ketertiban Struktur'] },
-            'ENFJ': { name: 'Protagonist', desc: 'Pemimpin kharismatik yang mampu menginspirasi pendengarnya.', stack: ['Fe', 'Ni', 'Se', 'Ti'], labels: ['Koneksi Sosial', 'Visi Bermakna', 'Kehadiran Fisik', 'Analisis Logis'] },
-            'ENFP': { name: 'Campaigner', desc: 'Pribadi yang antusias, kreatif, dan berjiwa bebas.', stack: ['Ne', 'Fi', 'Te', 'Si'], labels: ['Ide Kreatif', 'Nilai Personal', 'Eksekusi Rencana', 'Data Masa Lalu'] },
-
-            // Sentinels
-            'ISTJ': { name: 'Logistician', desc: 'Praktis dan mengutamakan fakta yang tidak diragukan lagi.', stack: ['Si', 'Te', 'Fi', 'Ne'], labels: ['Data & Memori', 'Logika Objektif', 'Integritas Diri', 'Eksplorasi Baru'] },
-            'ISFJ': { name: 'Defender', desc: 'Pelindung yang sangat setia dan hangat.', stack: ['Si', 'Fe', 'Ti', 'Ne'], labels: ['Memori Pengalaman', 'Harmoni Sosial', 'Akurasi Internal', 'Potensi Perubahan'] },
-            'ESTJ': { name: 'Executive', desc: 'Administrator unggul, sangat pandai mengelola sesuatu.', stack: ['Te', 'Si', 'Ne', 'Fi'], labels: ['Eksekusi Logis', 'Detail & Prosedur', 'Eksplorasi Ide', 'Nilai Internal'] },
-            'ESFJ': { name: 'Consul', desc: 'Pribadi yang sangat peduli, sosial, dan populer.', stack: ['Fe', 'Si', 'Ne', 'Ti'], labels: ['Harmoni Sosial', 'Detail Tradisi', 'Gagasan Baru', 'Kerangka Logika'] },
-
-            // Explorers
-            'ISTP': { name: 'Virtuoso', desc: 'Eksperimenter yang berani dan praktis.', stack: ['Ti', 'Se', 'Ni', 'Fe'], labels: ['Analisis Teknis', 'Aksi Sensorik', 'Wawasan Insting', 'Respon Sosial'] },
-            'ISFP': { name: 'Adventurer', desc: 'Seniman yang fleksibel, menawan, dan siap mencoba hal baru.', stack: ['Fi', 'Se', 'Ni', 'Te'], labels: ['Ekspresi Diri', 'Eksplorasi Indra', 'Visi Batin', 'Efisiensi Rencana'] },
-            'ESTP': { name: 'Entrepreneur', desc: 'Pribadi yang cerdas, energik, dan sangat perseptif.', stack: ['Se', 'Ti', 'Fe', 'Ni'], labels: ['Aksi Instan', 'Analisis Praktis', 'Dinamika Sosial', 'Visi Masa Depan'] },
-            'ESFP': { name: 'Entertainer', desc: 'Pribadi yang spontan, energik, dan antusias.', stack: ['Se', 'Fi', 'Te', 'Ni'], labels: ['Antusiasme Fisik', 'Nilai Autentik', 'Organisasi Luar', 'Firasat Batin'] }
+            'INTJ': { name: 'Architect', stack: ['Ni', 'Te', 'Fi', 'Se'], labels: ['Visi Jangka Panjang', 'Strategi Efisien', 'Nilai Internal', 'Respon Fisik'] },
+            'INTP': { name: 'Logician', stack: ['Ti', 'Ne', 'Si', 'Fe'], labels: ['Analisis Sistem', 'Ide Kreatif', 'Detail Data', 'Harmoni Sosial'] },
+            'ENTJ': { name: 'Commander', stack: ['Te', 'Ni', 'Se', 'Fi'], labels: ['Organisasi Efisien', 'Visi Strategis', 'Aksi Nyata', 'Prinsip Diri'] },
+            'ENTP': { name: 'Debater', stack: ['Ne', 'Ti', 'Fe', 'Si'], labels: ['Eksplorasi Ide', 'Logika Kerangka', 'Adaptasi Sosial', 'Detail Memori'] },
+            'INFJ': { name: 'Advocate', stack: ['Ni', 'Fe', 'Ti', 'Se'], labels: ['Intuisi Dalam', 'Empati Kelompok', 'Logika Internal', 'Sadar Lingkungan'] },
+            'INFP': { name: 'Mediator', stack: ['Fi', 'Ne', 'Si', 'Te'], labels: ['Autentisitas Diri', 'Kemungkinan Baru', 'Kesan Masa Lalu', 'Struktur Luar'] },
+            'ENFJ': { name: 'Protagonist', stack: ['Fe', 'Ni', 'Se', 'Ti'], labels: ['Koneksi Sosial', 'Visi Bermakna', 'Aksi Langsung', 'Analisis Logis'] },
+            'ENFP': { name: 'Campaigner', stack: ['Ne', 'Fi', 'Te', 'Si'], labels: ['Peluang Kreatif', 'Nilai Personal', 'Eksekusi Rencana', 'Data Masa Lalu'] },
+            'ISTJ': { name: 'Logistician', stack: ['Si', 'Te', 'Fi', 'Ne'], labels: ['Stabilitas & Data', 'Logika Objektif', 'Integritas Diri', 'Ide Tak Terduga'] },
+            'ISFJ': { name: 'Defender', stack: ['Si', 'Fe', 'Ti', 'Ne'], labels: ['Memori & Detail', 'Harmoni Sosial', 'Akurasi Internal', 'Potensi Perubahan'] },
+            'ESTJ': { name: 'Executive', stack: ['Te', 'Si', 'Ne', 'Fi'], labels: ['Eksekusi Rencana', 'Sesuai Prosedur', 'Eksplorasi Baru', 'Nilai Internal'] },
+            'ESFJ': { name: 'Consul', stack: ['Fe', 'Si', 'Ne', 'Ti'], labels: ['Kepedulian Sosial', 'Detail Tradisi', 'Gagasan Baru', 'Kerangka Logika'] },
+            'ISTP': { name: 'Virtuoso', stack: ['Ti', 'Se', 'Ni', 'Fe'], labels: ['Analisis Teknis', 'Aksi Sensorik', 'Visi Instingtif', 'Respon Emosi'] },
+            'ISFP': { name: 'Adventurer', stack: ['Fi', 'Se', 'Ni', 'Te'], labels: ['Ekspresi Diri', 'Aksi Kreatif', 'Visi Batin', 'Efisiensi Rencana'] },
+            'ESTP': { name: 'Entrepreneur', stack: ['Se', 'Ti', 'Fe', 'Ni'], labels: ['Aksi Instan', 'Analisis Praktis', 'Dinamika Sosial', 'Visi Masa Depan'] },
+            'ESFP': { name: 'Entertainer', stack: ['Se', 'Fi', 'Te', 'Ni'], labels: ['Kesenangan Fisik', 'Nilai Autentik', 'Organisasi Luar', 'Visi Jauh'] }
         };
 
-        function updateStack(type) {
-            const data = mbtiData[type];
-            const nameEl = document.getElementById('display-type-name');
-            const descEl = document.getElementById('display-type-desc');
-            
-            nameEl.innerText = type + " - " + data.name;
-            descEl.innerText = data.desc;
+        // TEST QUESTIONS (Cognitive Function Based)
+        const questions = [
+            { text: "Saat menghadapi masalah baru, apa yang biasanya Anda lakukan pertama kali?", options: [
+                { text: "Melihat pola masa lalu yang pernah berhasil (Si)", score: { Si: 3 } },
+                { text: "Membayangkan berbagai kemungkinan solusi kreatif (Ne)", score: { Ne: 3 } }
+            ]},
+            { text: "Bagaimana Anda mengambil keputusan penting?", options: [
+                { text: "Berdasarkan logika objektif dan efisiensi (Te)", score: { Te: 3 } },
+                { text: "Berdasarkan nilai personal dan keyakinan diri (Fi)", score: { Fi: 3 } }
+            ]},
+            { text: "Di lingkungan sosial, apa yang paling Anda perhatikan?", options: [
+                { text: "Suasana hati dan kenyamanan orang lain (Fe)", score: { Fe: 3 } },
+                { text: "Kebenaran data dan fakta yang dibicarakan (Ti)", score: { Ti: 3 } }
+            ]},
+            { text: "Apa yang membuat Anda merasa paling puas?", options: [
+                { text: "Menyelesaikan target dengan sistem yang rapi (Te)", score: { Te: 3 } },
+                { text: "Memahami esensi mendalam dari suatu konsep (Ni)", score: { Ni: 3 } }
+            ]},
+            { text: "Bagaimana Anda memproses informasi baru?", options: [
+                { text: "Menghubungkannya dengan pengalaman fisik nyata (Se)", score: { Se: 3 } },
+                { text: "Mencari makna tersembunyi di baliknya (Ni)", score: { Ni: 3 } }
+            ]},
+            { text: "Saat berdiskusi, Anda lebih cenderung...", options: [
+                { text: "Menjaga keharmonisan grup agar semua senang (Fe)", score: { Fe: 3 } },
+                { text: "Mempertahankan akurasi logika meskipun berdebat (Ti)", score: { Ti: 3 } }
+            ]},
+            { text: "Mana yang lebih Anda sukai?", options: [
+                { text: "Rutinitas yang teratur dan jelas (Si)", score: { Si: 3 } },
+                { text: "Spontanitas dan mencoba hal baru (Se)", score: { Se: 3 } }
+            ]},
+            { text: "Pikiran Anda lebih sering...", options: [
+                { text: "Melompat dari satu ide ke ide lainnya (Ne)", score: { Ne: 3 } },
+                { text: "Fokus pada satu visi besar ke depan (Ni)", score: { Ni: 3 } }
+            ]},
+            { text: "Anda merasa tertekan jika...", options: [
+                { text: "Harus melanggar prinsip moral pribadi Anda (Fi)", score: { Fi: 3 } },
+                { text: "Pekerjaan Anda tidak efisien dan berantakan (Te)", score: { Te: 3 } }
+            ]},
+            { text: "Mana yang lebih mirip Anda?", options: [
+                { text: "Penyimpan memori yang mendetail (Si)", score: { Si: 3 } },
+                { text: "Pencari petualangan yang aktif (Se)", score: { Se: 3 } }
+            ]},
+            // 10 more to make it 20
+            { text: "Ketika mendengar cerita orang, Anda...", options: [
+                { text: "Ikut merasakan emosi mereka (Fe)", score: { Fe: 2 } },
+                { text: "Mencoba membedah fakta dalam cerita itu (Ti)", score: { Ti: 2 } }
+            ]},
+            { text: "Gaya kerja Anda lebih ke arah...", options: [
+                { text: "Terstruktur dan mengikuti metode teruji (Si)", score: { Si: 2 } },
+                { text: "Eksperimental dan penuh improvisasi (Ne)", score: { Ne: 2 } }
+            ]},
+            { text: "Apa yang paling berharga bagi Anda?", options: [
+                { text: "Menjadi diri sendiri yang autentik (Fi)", score: { Fi: 2 } },
+                { text: "Menjadi bagian dari komunitas yang harmonis (Fe)", score: { Fe: 2 } }
+            ]},
+            { text: "Anda lebih percaya pada...", options: [
+                { text: "Insting atau firasat batin (Ni)", score: { Ni: 2 } },
+                { text: "Data yang bisa dilihat dan disentuh (Se)", score: { Se: 2 } }
+            ]},
+            { text: "Jika ada konflik, Anda biasanya...", options: [
+                { text: "Menggunakan aturan dan prosedur untuk menengahi (Te)", score: { Te: 2 } },
+                { text: "Memastikan perasaan setiap orang dihargai (Fe)", score: { Fe: 2 } }
+            ]},
+            { text: "Cara Anda belajar biasanya...", options: [
+                { text: "Membongkar konsep sampai ke akar logikanya (Ti)", score: { Ti: 2 } },
+                { text: "Menerapkan langsung dalam praktek lapangan (Se)", score: { Se: 2 } }
+            ]},
+            { text: "Anda lebih suka lingkungan yang...", options: [
+                { text: "Penuh dengan ide-ide baru yang segar (Ne)", score: { Ne: 2 } },
+                { text: "Aman, stabil, dan bisa diprediksi (Si)", score: { Si: 2 } }
+            ]},
+            { text: "Fokus Anda lebih banyak pada...", options: [
+                { text: "Bagaimana cara mencapai tujuan secepat mungkin (Te)", score: { Te: 2 } },
+                { text: "Apakah tujuan ini sesuai dengan hati nurani saya (Fi)", score: { Fi: 2 } }
+            ]},
+            { text: "Intuisi Anda biasanya muncul dalam bentuk...", options: [
+                { text: "Kilatan pemahaman mendadak tentang masa depan (Ni)", score: { Ni: 2 } },
+                { text: "Koneksi antara banyak hal yang berbeda (Ne)", score: { Ne: 2 } }
+            ]},
+            { text: "Anda paling bangga jika dianggap sebagai orang yang...", options: [
+                { text: "Sangat logis dan kompeten secara teknis (Ti/Te)", score: { Ti: 1, Te: 1 } },
+                { text: "Sangat berempati dan memahami manusia (Fi/Fe)", score: { Fi: 1, Fe: 1 } }
+            ]}
+        ];
 
-            // Update stack tags and names
-            document.getElementById('stack-dom-tag').innerText = data.stack[0];
-            document.getElementById('stack-dom-name').innerText = data.labels[0];
-            
-            document.getElementById('stack-aux-tag').innerText = data.stack[1];
-            document.getElementById('stack-aux-name').innerText = data.labels[1];
-            
-            document.getElementById('stack-tert-tag').innerText = data.stack[2];
-            document.getElementById('stack-tert-name').innerText = data.labels[2];
-            
-            document.getElementById('stack-inf-tag').innerText = data.stack[3];
-            document.getElementById('stack-inf-name').innerText = data.labels[3];
+        // State Management
+        let currentView = 'home';
+        let currentQuestion = 0;
+        let scores = { Ni: 0, Ne: 0, Si: 0, Se: 0, Ti: 0, Te: 0, Fi: 0, Fe: 0 };
+        let userTypeResult = "";
 
-            // Subtle animation re-trigger
-            const stackDisplay = document.getElementById('stack-display');
-            stackDisplay.style.opacity = 0;
-            stackDisplay.style.transform = "translateX(10px)";
+        // Navigation
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             
-            setTimeout(() => {
-                stackDisplay.style.transition = 'all 0.4s ease-out';
-                stackDisplay.style.opacity = 1;
-                stackDisplay.style.transform = "translateX(0)";
-            }, 50);
+            document.getElementById(`view-${viewName}`).classList.add('active');
+            const nav = document.getElementById(`nav-${viewName}`);
+            if(nav) nav.classList.add('active');
+            
+            currentView = viewName;
+            window.scrollTo(0,0);
         }
 
-        // Initialize with ESTJ
-        window.onload = () => updateStack('ESTJ');
+        // Test Logic
+        function startTest() {
+            currentQuestion = 0;
+            scores = { Ni: 0, Ne: 0, Si: 0, Se: 0, Ti: 0, Te: 0, Fi: 0, Fe: 0 };
+            document.getElementById('test-intro').classList.add('hidden');
+            document.getElementById('test-questions').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-text').innerText = q.text;
+            document.getElementById('progress-text').innerText = `Pertanyaan ${currentQuestion + 1}/${questions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-4 text-left border border-slate-200 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition duration-200 group";
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center group-hover:border-indigo-500">
+                            <div class="w-2 h-2 rounded-full bg-indigo-600 opacity-0 group-hover:opacity-100"></div>
+                        </div>
+                        <span class="text-sm font-medium text-slate-700">${opt.text}</span>
+                    </div>
+                `;
+                btn.onclick = () => handleAnswer(opt.score);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(scoreObj) {
+            for (let func in scoreObj) {
+                scores[func] += scoreObj[func];
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                calculateResult();
+            }
+        }
+
+        function calculateResult() {
+            // Simplified logic: Check preferences between pairs
+            const E = (scores.Ne + scores.Se + scores.Te + scores.Fe);
+            const I = (scores.Ni + scores.Si + scores.Ti + scores.Fi);
+            const N = (scores.Ni + scores.Ne);
+            const S = (scores.Si + scores.Se);
+            const T = (scores.Ti + scores.Te);
+            const F = (scores.Fi + scores.Fe);
+            
+            // Heuristic J/P based on which function is stronger (Simplified)
+            let mbti = "";
+            mbti += (E >= I) ? "E" : "I";
+            mbti += (N >= S) ? "N" : "S";
+            mbti += (T >= F) ? "T" : "F";
+            
+            // P/J logic (Approximate based on dominant/aux)
+            // If ExxJ, dominant is Judging (Te/Fe). If ExxP, dominant is Perceiving (Ne/Se)
+            if (mbti.startsWith("E")) {
+                mbti += ( (scores.Te > scores.Ne && scores.Te > scores.Se) || (scores.Fe > scores.Ne && scores.Fe > scores.Se) ) ? "J" : "P";
+            } else {
+                mbti += ( (scores.Ni > scores.Ti && scores.Ni > scores.Fi) || (scores.Si > scores.Ti && scores.Si > scores.Fi) ) ? "J" : "P";
+            }
+
+            userTypeResult = mbti;
+            document.getElementById('test-questions').classList.add('hidden');
+            document.getElementById('test-results').classList.remove('hidden');
+            document.getElementById('result-type').innerText = mbti;
+            document.getElementById('result-name').innerText = mbtiData[mbti] ? mbtiData[mbti].name : "The Individual";
+        }
+
+        function resetTest() {
+            document.getElementById('test-results').classList.add('hidden');
+            document.getElementById('test-intro').classList.remove('hidden');
+        }
+
+        function viewTypeDetails() {
+            updateStack(userTypeResult);
+            switchView('stack');
+        }
+
+        // Visualizer Logic
+        function updateStack(type) {
+            if (!mbtiData[type]) return;
+            const data = mbtiData[type];
+            
+            document.getElementById('vis-type').innerText = type;
+            document.getElementById('vis-name').innerText = data.name;
+            
+            const ids = ['dom', 'aux', 'tert', 'inf'];
+            ids.forEach((id, index) => {
+                const row = document.getElementById(`vis-${id}`);
+                row.querySelector('.func-tag').innerText = data.stack[index];
+                row.querySelector('.func-desc').innerText = data.labels[index];
+            });
+            
+            // Visual feedback
+            const container = document.getElementById('stack-container');
+            container.style.opacity = "0.5";
+            setTimeout(() => { container.style.opacity = "1"; }, 100);
+        }
+
+        // Init
+        window.onload = () => {
+            updateStack('INTJ');
+        };
     </script>
 </body>
 </html>
