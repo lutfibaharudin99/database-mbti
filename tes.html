@@ -3,183 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisis Mendalam MBTI - Edisi Kerja</title>
+    <title>Tes MBTI Kognitif Detektif</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .option-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .option-card:hover { transform: scale(1.01); border-color: #4f46e5; background-color: #f8fafc; }
-        .option-card.selected { border-color: #4f46e5; bg-color: #eff6ff; ring: 2px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .option-card:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .option-card.selected {
+            border-color: #2563eb;
+            background-color: #dbeafe;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div id="app" class="max-w-2xl mx-auto py-12 px-4">
+    <div id="app" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden">
+        
         <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">Tes MBTI Mendalam</h1>
-            <p id="section-label" class="text-indigo-600 font-bold uppercase text-xs tracking-widest">Dimensi 1: Energi</p>
+        <div class="bg-blue-600 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold mb-2">Detektif Kognitif MBTI</h1>
+            <p class="text-blue-100 text-sm">Bongkar "mesin" di balik pikiranmu melalui 4 skenario ini.</p>
         </div>
 
         <!-- Progress Bar -->
-        <div class="mb-10">
-            <div class="flex justify-between text-xs font-bold mb-2 text-slate-400">
-                <span id="progress-text">Pertanyaan 1/20</span>
-                <span id="percent-text">0%</span>
-            </div>
-            <div class="w-full bg-slate-200 rounded-full h-2.5 shadow-sm">
-                <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-            </div>
+        <div id="progress-container" class="w-full bg-gray-200 h-1.5 hidden">
+            <div id="progress-bar" class="bg-blue-500 h-1.5 transition-all duration-300" style="width: 25%"></div>
         </div>
 
-        <!-- Question Container -->
-        <div id="question-container" class="bg-white rounded-3xl shadow-xl p-8 border border-slate-100 relative overflow-hidden">
-            <div id="question-content">
-                <h2 id="question-title" class="text-xl font-bold text-slate-800 mb-8 leading-snug"></h2>
-                
-                <div class="space-y-4">
-                    <button onclick="handleSelect('A')" class="option-card w-full text-left p-6 rounded-2xl border-2 border-slate-100 bg-white flex items-start group">
-                        <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center font-bold mr-4 group-hover:bg-indigo-600 group-hover:text-white shrink-0">A</div>
-                        <span id="option-a-text" class="text-slate-700 font-medium leading-relaxed"></span>
+        <!-- Area Konten Utama -->
+        <div id="content-area" class="p-6 sm:p-8">
+            
+            <!-- Layar: Intro -->
+            <div id="screen-intro" class="text-center fade-enter fade-enter-active">
+                <div class="mb-6 flex justify-center">
+                    <svg class="w-20 h-20 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-4">Selamat Datang di Ujian Simulasi</h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Tes ini berbeda dari tes MBTI biasa. Kami tidak bertanya sifatmu, melainkan melemparmu ke dalam 4 skenario spesifik. Pilih reaksi yang <strong>paling otomatis</strong> keluar dari dirimu tanpa memikirkan "mana yang benar/salah".
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="startTest()" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-md">
+                        Mulai Observasi
                     </button>
+                    <a href="index.html" class="px-8 py-3 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium rounded-lg transition-colors flex items-center justify-center">
+                        Kembali ke Beranda
+                    </a>
+                </div>
+            </div>
 
-                    <button onclick="handleSelect('B')" class="option-card w-full text-left p-6 rounded-2xl border-2 border-slate-100 bg-white flex items-start group">
-                        <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center font-bold mr-4 group-hover:bg-indigo-600 group-hover:text-white shrink-0">B</div>
-                        <span id="option-b-text" class="text-slate-700 font-medium leading-relaxed"></span>
+            <!-- Layar: Pertanyaan -->
+            <div id="screen-question" class="hidden">
+                <div class="mb-2 text-sm font-semibold text-blue-600 uppercase tracking-wider" id="question-indicator">Pertanyaan 1 dari 4</div>
+                <h2 class="text-lg font-semibold mb-6 text-gray-800 leading-snug" id="question-text">Skenario...</h2>
+                
+                <div id="options-container" class="space-y-3">
+                    <!-- Pilihan akan disuntikkan di sini -->
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button id="btn-next" onclick="nextQuestion()" disabled class="px-6 py-2.5 bg-gray-300 text-gray-500 cursor-not-allowed font-medium rounded-lg transition-colors">
+                        Selanjutnya
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Result Card -->
-        <div id="result-card" class="hidden animate-in fade-in duration-700">
-            <div class="bg-white rounded-3xl shadow-2xl p-10 border border-slate-100 text-center">
-                <p class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-2">Tipe Kepribadian Anda</p>
-                <h1 id="mbti-type" class="text-7xl font-black text-indigo-600 mb-6 tracking-tighter">....</h1>
+            <!-- Layar: Hasil -->
+            <div id="screen-result" class="hidden text-center fade-enter">
+                <h2 class="text-2xl font-bold mb-2 text-gray-800">Analisis Selesai</h2>
+                <p class="text-gray-600 mb-8">Berdasarkan cara otakmu merespons skenario, inilah profil kognitifmu:</p>
                 
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Fungsi Dominan</p>
-                        <p id="dom-func" class="text-xl font-black text-slate-800">--</p>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6">
+                    <div class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Tipe MBTI Dominan</div>
+                    <div id="result-mbti" class="text-4xl font-extrabold text-blue-600 mb-2">ISTP</div>
+                    <div id="result-title" class="text-lg font-medium text-gray-700">Sang Mekanik Sistem</div>
+                </div>
+
+                <div class="text-left space-y-4 mb-8">
+                    <h3 class="font-semibold text-gray-800 border-b pb-2">Mesin Kognitif Utamamu:</h3>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                        <div class="font-bold text-blue-800 mb-1" id="func-1-title">Fungsi 1</div>
+                        <p class="text-sm text-blue-900" id="func-1-desc">Deskripsi 1</p>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Fungsi Aux</p>
-                        <p id="aux-func" class="text-xl font-black text-slate-800">--</p>
+                    
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                        <div class="font-bold text-green-800 mb-1" id="func-2-title">Fungsi 2</div>
+                        <p class="text-sm text-green-900" id="func-2-desc">Deskripsi 2</p>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                        <div class="font-bold text-yellow-800 mb-1" id="func-3-title">Fungsi 3</div>
+                        <p class="text-sm text-yellow-900" id="func-3-desc">Deskripsi 3</p>
+                    </div>
+
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                        <div class="font-bold text-red-800 mb-1" id="func-4-title">Titik Stres (Inferior)</div>
+                        <p class="text-sm text-red-900" id="func-4-desc">Deskripsi 4</p>
                     </div>
                 </div>
 
-                <div id="description-box" class="text-left bg-indigo-50 p-6 rounded-2xl text-slate-700 text-sm leading-relaxed mb-8">
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="resetTest()" class="px-6 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 font-medium rounded-lg transition-colors">
+                        Ulangi Tes
+                    </button>
+                    <a href="index.html" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                        Kembali ke Beranda
+                    </a>
                 </div>
-
-                <button onclick="location.reload()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200">
-                    Mulai Ulang Tes
-                </button>
             </div>
+
         </div>
     </div>
 
     <script>
         const questions = [
-            // DIMENSI 1: ENERGI (E vs I) - 5 Soal
-            { section: "Energi", q: "Setelah seharian penuh berkoordinasi dengan banyak orang di lapangan, bagaimana perasaan Anda?", a: "Semakin semangat dan berenergi untuk melanjutkan kegiatan sosial lain.", b: "Merasa butuh waktu sendiri untuk 'charge' energi tanpa gangguan siapapun.", trait: "EI" },
-            { section: "Energi", q: "Bagaimana cara Anda memproses masalah yang rumit?", a: "Mendiskusikannya langsung dengan orang lain untuk mendapatkan perspektif luar.", b: "Memikirkannya secara mendalam sendirian sebelum membicarakannya.", trait: "EI" },
-            { section: "Energi", q: "Di kantor, Anda lebih dikenal sebagai sosok yang...", a: "Mudah didekati, ekspresif, dan suka keramaian.", b: "Tenang, observatif, dan lebih suka lingkaran kecil.", trait: "EI" },
-            { section: "Energi", q: "Saat sedang rapat, Anda cenderung...", a: "Langsung mengutarakan ide begitu terpikirkan.", b: "Mendengarkan semua orang dulu, lalu bicara jika diperlukan.", trait: "EI" },
-            { section: "Energi", q: "Mana yang lebih melelahkan bagi Anda?", a: "Duduk diam sendirian di meja kerja sepanjang hari tanpa interaksi.", b: "Harus terus menerus presentasi dan bicara di depan umum tanpa henti.", trait: "EI" },
-
-            // DIMENSI 2: INFORMASI (S vs N) - 5 Soal
-            { section: "Informasi", q: "Saat menerima instruksi baru, apa yang Anda butuhkan?", a: "Detail spesifik, langkah demi langkah, dan contoh nyata.", b: "Gambaran besar, konsep utama, dan tujuan akhirnya saja.", trait: "SN" },
-            { section: "Informasi", q: "Anda lebih percaya pada...", a: "Pengalaman masa lalu dan data yang sudah terbukti.", b: "Firasat dan potensi ide-ide baru yang belum pernah dicoba.", trait: "SN" },
-            { section: "Informasi", q: "Jika melihat sebuah restoran baru, apa yang pertama kali Anda perhatikan?", a: "Kebersihan meja, menu fisik, dan harga yang tertera.", b: "Konsep uniknya, suasana masa depannya, dan peluang bisnisnya.", trait: "SN" },
-            { section: "Informasi", q: "Dalam menyelesaikan tugas, Anda lebih suka...", a: "Menyempurnakan metode yang sudah ada.", b: "Menemukan cara baru yang lebih kreatif dan berbeda.", trait: "SN" },
-            { section: "Informasi", q: "Anda sering dianggap sebagai orang yang...", a: "Praktis dan membumi (realistis).", b: "Imajinatif dan visioner (teoretis).", trait: "SN" },
-
-            // DIMENSI 3: KEPUTUSAN (T vs F) - 5 Soal
-            { section: "Keputusan", q: "Saat harus menegur staf yang kinerjanya buruk tapi dia sedang ada masalah keluarga, Anda...", a: "Tetap menegurnya secara profesional demi target tim (objektif).", b: "Memberinya kelonggaran karena mempertimbangkan kondisinya (empati).", trait: "TF" },
-            { section: "Keputusan", q: "Mana yang lebih penting bagi Anda dalam sebuah tim?", a: "Kejelasan tugas dan kompetensi setiap anggota.", b: "Harmoni antar anggota dan kenyamanan suasana kerja.", trait: "TF" },
-            { section: "Keputusan", q: "Kritik yang paling masuk akal bagi Anda adalah...", a: "Kritik yang tajam, logis, dan berdasarkan fakta kerja.", b: "Kritik yang disampaikan dengan halus dan memperhatikan perasaan.", trait: "TF" },
-            { section: "Keputusan", q: "Saat memutuskan sesuatu, Anda menggunakan...", a: "Analisis pro-kontra yang rasional.", b: "Nilai pribadi dan dampak emosional bagi orang sekitar.", trait: "TF" },
-            { section: "Keputusan", q: "Anda merasa bangga jika dianggap sebagai orang yang...", a: "Adil dan tidak memihak (objektif).", b: "Peka dan suportif (hangat).", trait: "TF" },
-
-            // DIMENSI 4: STRUKTUR (J vs P) - 5 Soal
-            { section: "Struktur", q: "Bagaimana gaya Anda dalam mengerjakan sebuah project?", a: "Direncanakan dengan matang sejak awal dengan deadline ketat.", b: "Fleksibel, mengikuti arus, dan biasanya kencang di menit-menit terakhir.", trait: "JP" },
-            { section: "Struktur", q: "Jika ada rencana liburan yang tiba-tiba berubah, Anda...", a: "Merasa kesal karena jadwal yang sudah disusun menjadi berantakan.", b: "Sangat santai dan justru menikmati kejutan atau perubahan tersebut.", trait: "JP" },
-            { section: "Struktur", q: "Meja kerja Anda biasanya...", a: "Rapi, terorganisir, dan semua pada tempatnya.", b: "Berantakan secara kreatif, namun Anda tahu di mana letak barangnya.", trait: "JP" },
-            { section: "Struktur", q: "Anda lebih nyaman jika hidup Anda...", a: "Punya kepastian dan struktur yang jelas.", b: "Punya banyak pilihan dan kebebasan untuk berubah pikiran.", trait: "JP" },
-            { section: "Struktur", q: "Dalam bekerja, mana yang paling menggambarkan Anda?", a: "Selesaikan sekarang agar tenang nanti.", b: "Tunggu sampai mood atau ide muncul, baru eksekusi.", trait: "JP" }
+            {
+                text: "Bayangkan teman dekatmu mau resign buat buka kedai kopi padahal nggak punya tabungan/pengalaman. Pas dia minta pendapat, apa reaksi otomatis paling pertamamu?",
+                options: [
+                    { value: "Te", text: "Tanya hitungan untung-ruginya. Suruh bikin rencana bisnis logis. Kalau nggak masuk akal, larang keras." },
+                    { value: "Ti", text: "Bongkar idenya bareng. Analisis sistem kerjanya nanti gimana sampai dia sadar sendiri celahnya di mana." },
+                    { value: "Fe", text: "Hargai semangatnya dulu biar nggak down. Pelan-pelan ajak ngobrol halus biar dia mikir risikonya tanpa merasa dihakimi." },
+                    { value: "Fi", text: "Kalau itu passion-nya, dukung 100%. Ikut kata hati dan mental itu lebih penting dari kerjaan stabil yang bikin stres." }
+                ]
+            },
+            {
+                text: "Kita mau liburan ke luar kota yang belum pernah didatangi. Sebagai ketua, gaya liburan apa yang bikin kamu paling nyaman?",
+                options: [
+                    { value: "Si", text: "Bikin itinerary jelas. Hotel/tiket udah aman. Baca review orang biar kita nggak nyasar atau zonk." },
+                    { value: "Se", text: "Santai aja jadwalnya. Yang penting nyampai, langsung keliling nyari tempat asik di pinggir jalan. Spontan aja." },
+                    { value: "Ne", text: "Bikin daftar panjang kemungkinan tempat. Nanti di sana disesuaikan (punya plan B atau plan C kalau hujan)." },
+                    { value: "Ni", text: "Cari 1 atau 2 tempat utama yang 'vibe'-nya kuat banget. Lebih baik meresapi satu tempat daripada buru-buru pindah." }
+                ]
+            },
+            {
+                text: "Setelah minggu yang super sibuk dan ketemu banyak orang, besok harinya kamu libur. Cara paling ampuh 'nge-charge' bateraimu:",
+                options: [
+                    { value: "Pe", text: "Keluar rumah cari suasana baru! Nongkrong, olahraga, coba kafe. Diam di rumah malah bikin pusing." },
+                    { value: "Je", text: "Beres-beres rumah besar-besaran atau nyelesaiin tugas tertunda. Rasanya lega kalau lingkungan udah terkontrol." },
+                    { value: "Ji", text: "Ngunci diri seharian ngerjain hobi/misi sendirian. Nggak mau diganggu, nggak mau ngobrol sama orang." },
+                    { value: "Pi", text: "Isolasi dan rebahan total. Tidur, nonton yang ringan-ringan, mematikan otak dari rangsangan luar." }
+                ]
+            },
+            {
+                text: "Pas kamu lagi capek mental dan burnout parah, perubahan sifat apa yang otomatis sering kejadian di kamu?",
+                options: [
+                    { value: "Fe_inf", text: "Tiba-tiba jadi emosional, meledak, merasa kesepian/nggak ada yang menghargai (padahal biasanya logis)." },
+                    { value: "Ne_inf", text: "Tiba-tiba mikirin masa depan yang ancur. Otak overthinking skenario terburuk 'gimana kalau besok gagal'." },
+                    { value: "Te_inf", text: "Tiba-tiba jadi bossy, kasar, ngritik detail, dan nyalahin orang lain karena kerjaannya lelet." },
+                    { value: "Se_inf", text: "Tiba-tiba impulsif banget. Makan gila-gilaan, belanja online ngawur, atau beres-beres rumah sampai obsesif." }
+                ]
+            }
         ];
 
-        let currentStep = 0;
-        let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        // Database Komprehensif 16 Tipe Kognitif
+        const mbtiData = {
+            "ISTP": { title: "Sang Virtuoso / Mekanik Logika", dom: ["Dominan: Introverted Thinking (Ti)", "Membongkar masalah secara mandiri, benci aturan tak logis, mencari cara paling efisien."], aux: ["Pendukung: Extraverted Sensing (Se)", "Belajar dengan terjun langsung, menyukai pengalaman fisik/kualitas tinggi."], ter: ["Ketiga: Introverted Intuition (Ni)", "Fokus pada satu visi tajam saat asyik memecahkan masalah."], inf: ["Titik Stres: Extraverted Feeling (Fe)", "Diam-diam membangkang, stres jika dipaksa berbasa-basi emosional."] },
+            "INTP": { title: "Sang Arsitek Logika", dom: ["Dominan: Introverted Thinking (Ti)", "Membangun kerangka konsep di kepala, mencari presisi kebenaran absolut."], aux: ["Pendukung: Extraverted Intuition (Ne)", "Brainstorming, menyukai ide-ide aneh dan kemungkinan teoretis."], ter: ["Ketiga: Introverted Sensing (Si)", "Mencari kenyamanan dari rutinitas ringan atau nostalgia masa lalu."], inf: ["Titik Stres: Extraverted Feeling (Fe)", "Merasa terasing, bisa meledak secara emosional saat tertekan hebat."] },
+            "ISFJ": { title: "Sang Pelindung Empatik", dom: ["Dominan: Introverted Sensing (Si)", "Menghargai stabilitas, masa lalu, dan metode yang sudah terbukti aman."], aux: ["Pendukung: Extraverted Feeling (Fe)", "Berdedikasi menciptakan harmoni dan kenyamanan untuk orang lain."], ter: ["Ketiga: Introverted Thinking (Ti)", "Menganalisis sesuatu secara mendetail di balik layar secara mandiri."], inf: ["Titik Stres: Extraverted Intuition (Ne)", "Sangat stres dan panik (overthinking) menghadapi ketidakpastian mendadak."] },
+            "ISTJ": { title: "Sang Inspektur Logis", dom: ["Dominan: Introverted Sensing (Si)", "Sangat terstruktur, mengandalkan fakta keras dan prosedur teruji."], aux: ["Pendukung: Extraverted Thinking (Te)", "Mengatur dunia luar agar efisien, taat aturan, dan menyelesaikan tugas."], ter: ["Ketiga: Introverted Feeling (Fi)", "Punya standar moral internal yang kuat dan loyalitas mendalam (jarang terlihat)."], inf: ["Titik Stres: Extraverted Intuition (Ne)", "Takut pada masa depan yang tidak jelas, menolak usulan aneh tanpa bukti."] },
+            "ESTP": { title: "Sang Dinamo Aksi", dom: ["Dominan: Extraverted Sensing (Se)", "Aksi dulu, mikir belakangan. Sangat adaptif dan mencari intensitas saat ini."], aux: ["Pendukung: Introverted Thinking (Ti)", "Logika taktis untuk merespons dan memecahkan masalah langsung di tempat."], ter: ["Ketiga: Extraverted Feeling (Fe)", "Pintar membaca ruangan, karismatik, dan jago mencairkan suasana."], inf: ["Titik Stres: Introverted Intuition (Ni)", "Benci komitmen jangka panjang. Pandangan masa depan jadi pesimis saat stres."] },
+            "ESFP": { title: "Sang Penghibur", dom: ["Dominan: Extraverted Sensing (Se)", "Spontan, mencintai kehidupan, dan selalu mencari sensasi/pengalaman baru."], aux: ["Pendukung: Introverted Feeling (Fi)", "Kompas moral yang kuat untuk ekspresi diri autentik dan peduli sesama."], ter: ["Ketiga: Extraverted Thinking (Te)", "Bisa sangat pragmatis dan cepat mengatur logistik jika sedang termotivasi."], inf: ["Titik Stres: Introverted Intuition (Ni)", "Paranoid terhadap nasib/masa depan saat stres berat, mengabaikan jangka panjang."] },
+            "ENTP": { title: "Sang Debater / Visioner", dom: ["Dominan: Extraverted Intuition (Ne)", "Melihat berbagai kemungkinan, antusias, dan senang berdebat konseptual."], aux: ["Pendukung: Introverted Thinking (Ti)", "Menganalisis argumen secara logis untuk mencari kebenaran absolut."], ter: ["Ketiga: Extraverted Feeling (Fe)", "Menggunakan karisma sosial untuk meyakinkan orang akan ide-idenya."], inf: ["Titik Stres: Introverted Sensing (Si)", "Membenci rutinitas. Saat stres, bisa sangat kaku pada hal-hal kecil/masa lalu."] },
+            "ENFP": { title: "Sang Juru Kampanye", dom: ["Dominan: Extraverted Intuition (Ne)", "Sangat imajinatif, melihat kehidupan sebagai peluang tak terbatas."], aux: ["Pendukung: Introverted Feeling (Fi)", "Mengambil keputusan berdasar nilai personal mendalam dan empati."], ter: ["Ketiga: Extraverted Thinking (Te)", "Terorganisir secara mengejutkan saat memperjuangkan ide yang ia pedulikan."], inf: ["Titik Stres: Introverted Sensing (Si)", "Lupa detail fisik. Saat stres parah, terobsesi pada kegagalan spesifik di masa lalu."] },
+            "ESTJ": { title: "Sang Eksekutif", dom: ["Dominan: Extraverted Thinking (Te)", "Memimpin, mengatur secara objektif, efisien, dan fokus pada target nyata."], aux: ["Pendukung: Introverted Sensing (Si)", "Menghargai tatanan yang jelas dan pengalaman lalu untuk prediktabilitas."], ter: ["Ketiga: Extraverted Intuition (Ne)", "Melahirkan ide baru jika terbukti bisa meningkatkan efisiensi sistem."], inf: ["Titik Stres: Introverted Feeling (Fi)", "Sering menekan perasaan. Merasa tidak dihargai/tak berguna saat burnout."] },
+            "ENTJ": { title: "Sang Komandan", dom: ["Dominan: Extraverted Thinking (Te)", "Sangat efisien, tegas, dan ahli merancang strategi besar untuk jangka panjang."], aux: ["Pendukung: Introverted Intuition (Ni)", "Punya visi masa depan tajam yang memandu semua keputusan strategisnya."], ter: ["Ketiga: Extraverted Sensing (Se)", "Menikmati kualitas tinggi, ambisius, dan eksekusi yang penuh keberanian."], inf: ["Titik Stres: Introverted Feeling (Fi)", "Menolak sisi emosional. Bisa meledak dengan perasaan kesepian saat stres."] },
+            "ESFJ": { title: "Sang Pengasuh", dom: ["Dominan: Extraverted Feeling (Fe)", "Fokus pada harmoni, merawat orang lain, dan memenuhi ekspektasi sosial kelompok."], aux: ["Pendukung: Introverted Sensing (Si)", "Mengingat ulang tahun, tradisi, dan menjaga keteraturan komunitas."], ter: ["Ketiga: Extraverted Intuition (Ne)", "Menyukai ide-ide baru yang positif untuk membahagiakan orang sekitarnya."], inf: ["Titik Stres: Introverted Thinking (Ti)", "Benci analisis dingin. Tiba-tiba menjadi sangat kritis mencari kesalahan saat tertekan."] },
+            "ENFJ": { title: "Sang Protagonis", dom: ["Dominan: Extraverted Feeling (Fe)", "Pemimpin empatik yang memotivasi dan sangat peka pada emosi kelompok."], aux: ["Pendukung: Introverted Intuition (Ni)", "Memiliki visi kuat tentang potensi masa depan orang-orang di sekitarnya."], ter: ["Ketiga: Extraverted Sensing (Se)", "Menghargai pengalaman estetik dan menciptakan momen yang berkesan bersama."], inf: ["Titik Stres: Introverted Thinking (Ti)", "Ragu pada logika sendiri, takut bertindak tidak masuk akal saat sangat stres."] },
+            "INFJ": { title: "Sang Advokat", dom: ["Dominan: Introverted Intuition (Ni)", "Memahami makna tersembunyi, fokus pada satu visi besar masa depan secara intuitif."], aux: ["Pendukung: Extraverted Feeling (Fe)", "Menyerap emosi orang lain, berusaha keras membantu mencapai harmoni."], ter: ["Ketiga: Introverted Thinking (Ti)", "Menganalisis sistem/kebenaran konseptual secara mandiri saat sedang santai."], inf: ["Titik Stres: Extraverted Sensing (Se)", "Sensitif terhadap kekacauan fisik. Stres lari ke perilaku impulsif (makan/belanja)."] },
+            "INTJ": { title: "Sang Mastermind", dom: ["Dominan: Introverted Intuition (Ni)", "Membangun rencana strategis jangka panjang, mandiri, dan fokus pada gambaran besar."], aux: ["Pendukung: Extraverted Thinking (Te)", "Mengeksekusi rencana secara efisien, objektif, dan logis di dunia nyata."], ter: ["Ketiga: Introverted Feeling (Fi)", "Punya kompas moral sangat personal dan loyalitas yang tersembunyi."], inf: ["Titik Stres: Extraverted Sensing (Se)", "Benci kebisingan fisik. Saat stres, memanjakan indera secara berlebihan/putus realitas."] },
+            "INFP": { title: "Sang Mediator", dom: ["Dominan: Introverted Feeling (Fi)", "Punya moral internal kuat, menjunjung tinggi autentisitas dan individualitas (anti-fake)."], aux: ["Pendukung: Extraverted Intuition (Ne)", "Penuh imajinasi, antusias mengeksplorasi ide, dan seni."], ter: ["Ketiga: Introverted Sensing (Si)", "Sangat nostalgia dan menikmati kenyamanan rutinitas kecil yang damai."], inf: ["Titik Stres: Extraverted Thinking (Te)", "Tiba-tiba sangat bossy, kritis kaku, dan menyalahkan inefisiensi saat tertekan hebat."] },
+            "ISFP": { title: "Sang Seniman", dom: ["Dominan: Introverted Feeling (Fi)", "Berjiwa bebas, mengekspresikan nilai autentik melalui tindakan/karya nyata."], aux: ["Pendukung: Extraverted Sensing (Se)", "Sangat sadar keindahan, responsif pada estetik, dan pengalaman di momen ini."], ter: ["Ketiga: Introverted Intuition (Ni)", "Punya insting/firasat kuat mendadak tentang hasil dari suatu kejadian."], inf: ["Titik Stres: Extraverted Thinking (Te)", "Benci diatur. Saat tertekan hebat, menjadi kasar dan mendikte orang lain."] }
+        };
 
-        function updateUI() {
-            if (currentStep < questions.length) {
-                const q = questions[currentStep];
-                document.getElementById('section-label').innerText = `Bagian: ${q.section}`;
-                document.getElementById('question-title').innerText = q.q;
-                document.getElementById('option-a-text').innerText = q.a;
-                document.getElementById('option-b-text').innerText = q.b;
-                
-                const progress = (currentStep / questions.length) * 100;
-                document.getElementById('progress-bar').style.width = `${progress}%`;
-                document.getElementById('progress-text').innerText = `Pertanyaan ${currentStep + 1}/${questions.length}`;
-                document.getElementById('percent-text').innerText = `${Math.round(progress)}%`;
-            } else {
-                showResults();
-            }
-        }
+        // State aplikasi
+        let currentQuestionIndex = 0;
+        let answers = [];
+        let selectedOptionValue = null;
 
-        function handleSelect(choice) {
-            const q = questions[currentStep];
-            const traitPair = q.trait; // "EI", "SN", etc.
-            const primary = traitPair[0];
-            const secondary = traitPair[1];
+        // Elemen DOM
+        const screenIntro = document.getElementById('screen-intro');
+        const screenQuestion = document.getElementById('screen-question');
+        const screenResult = document.getElementById('screen-result');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const btnNext = document.getElementById('btn-next');
+        const questionIndicator = document.getElementById('question-indicator');
 
-            if (choice === 'A') scores[primary]++;
-            else scores[secondary]++;
-
-            currentStep++;
-            updateUI();
-        }
-
-        function showResults() {
-            document.getElementById('question-container').classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-            document.getElementById('section-label').innerText = "Analisis Selesai";
-
-            const type = [
-                scores.E >= scores.I ? 'E' : 'I',
-                scores.S >= scores.N ? 'S' : 'N',
-                scores.T >= scores.F ? 'T' : 'F',
-                scores.J >= scores.P ? 'J' : 'P'
-            ].join('');
-
-            document.getElementById('mbti-type').innerText = type;
+        // Navigasi Layar
+        function showScreen(screen) {
+            screenIntro.classList.add('hidden');
+            screenQuestion.classList.add('hidden');
+            screenResult.classList.add('hidden');
+            screenIntro.classList.remove('fade-enter-active');
             
-            // Logic for Function Stack
-            const stacks = {
-                'ESTJ': ['Te', 'Si'], 'ESTP': ['Se', 'Ti'], 'ISTJ': ['Si', 'Te'], 'ISTP': ['Ti', 'Se'],
-                'ESFJ': ['Fe', 'Si'], 'ESFP': ['Se', 'Fi'], 'ISFJ': ['Si', 'Fe'], 'ISFP': ['Fi', 'Se'],
-                'ENTJ': ['Te', 'Ni'], 'ENTP': ['Ne', 'Ti'], 'INTJ': ['Ni', 'Te'], 'INTP': ['Ti', 'Ne']
-            };
-
-            const stack = stacks[type] || ['??', '??'];
-            document.getElementById('dom-func').innerText = stack[0];
-            document.getElementById('aux-func').innerText = stack[1];
-
-            let desc = "";
-            if (type === 'ESTP') {
-                desc = "<b>Eksekutor Taktis Lapangan:</b> Anda sangat hebat dalam membaca situasi saat ini dan mengambil tindakan instan. Anda tidak suka dibatasi oleh birokrasi dan lebih memilih membuktikan hasil lewat aksi nyata.";
-            } else if (type === 'ESTJ') {
-                desc = "<b>Administrator Efisien:</b> Anda adalah pengelola yang handal. Anda sangat menghargai struktur, jadwal, dan prosedur untuk memastikan semua target tercapai secara teratur.";
-            } else {
-                desc = "Anda memiliki kombinasi unik antara preferensi Anda. Fokuslah pada bagaimana fungsi dominan Anda membantu Anda dalam mengambil keputusan di pekerjaan sehari-hari.";
+            if (screen === 'intro') {
+                screenIntro.classList.remove('hidden');
+                setTimeout(() => screenIntro.classList.add('fade-enter-active'), 10);
+                progressContainer.classList.add('hidden');
+            } else if (screen === 'question') {
+                screenQuestion.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+            } else if (screen === 'result') {
+                screenResult.classList.remove('hidden');
+                progressContainer.classList.add('hidden');
+                setTimeout(() => screenResult.classList.add('fade-enter-active'), 10);
             }
-            document.getElementById('description-box').innerHTML = desc;
         }
 
-        updateUI();
+        function startTest() {
+            currentQuestionIndex = 0;
+            answers = [];
+            loadQuestion();
+            showScreen('question');
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            questionIndicator.innerText = `Pertanyaan ${currentQuestionIndex + 1} dari ${questions.length}`;
+            questionText.innerText = q.text;
+            
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            optionsContainer.innerHTML = '';
+            selectedOptionValue = null;
+            updateNextButton();
+
+            q.options.forEach((opt, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-200';
+                div.onclick = () => selectOption(div, opt.value);
+                
+                div.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center mr-3 mt-0.5 option-radio">
+                            <div class="w-3 h-3 bg-blue-600 rounded-full hidden"></div>
+                        </div>
+                        <div class="text-gray-700 text-sm sm:text-base">${opt.text}</div>
+                    </div>
+                `;
+                optionsContainer.appendChild(div);
+            });
+        }
+
+        function selectOption(element, value) {
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('.bg-blue-600').classList.add('hidden');
+            });
+            element.classList.add('selected');
+            element.querySelector('.bg-blue-600').classList.remove('hidden');
+            selectedOptionValue = value;
+            updateNextButton();
+        }
+
+        function updateNextButton() {
+            if (selectedOptionValue) {
+                btnNext.disabled = false;
+                btnNext.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                btnNext.classList.add('bg-blue-600', 'hover:bg-blue-700', 'text-white', 'shadow-md');
+            } else {
+                btnNext.disabled = true;
+                btnNext.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                btnNext.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white', 'shadow-md');
+            }
+        }
+
+        function nextQuestion() {
+            answers.push(selectedOptionValue);
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                calculateResult();
+            }
+        }
+
+        // Logika Perhitungan Kognitif Total (Jungian Algorithm)
+        function calculateResult() {
+            const [dec, obs, nrg, str] = answers;
+            
+            // Ekstraksi 4 Huruf MBTI secara otomatis
+            // 1. I vs E (Berdasarkan sumber energi: Pe/Je = E, Ji/Pi = I)
+            const e_i = (nrg === 'Pe' || nrg === 'Je') ? 'E' : 'I';
+            
+            // 2. S vs N (Berdasarkan cara memproses observasi: Si/Se = S, Ni/Ne = N)
+            const s_n = (obs === 'Si' || obs === 'Se') ? 'S' : 'N';
+            
+            // 3. T vs F (Berdasarkan cara mengambil keputusan: Ti/Te = T, Fi/Fe = F)
+            const t_f = (dec === 'Ti' || dec === 'Te') ? 'T' : 'F';
+            
+            // 4. J vs P (Extraverted Judging vs Extraverted Perceiving)
+            const j_p = (nrg === 'Je' || nrg === 'Pi') ? 'J' : 'P';
+
+            // Menggabungkan huruf menjadi kunci Tipe MBTI
+            const mbtiResult = e_i + s_n + t_f + j_p;
+            
+            // Menarik detail dari Database
+            const data = mbtiData[mbtiResult];
+
+            // Menyuntikkan ke DOM
+            document.getElementById('result-mbti').innerText = mbtiResult;
+            document.getElementById('result-title').innerText = data.title;
+            
+            document.getElementById('func-1-title').innerText = data.dom[0];
+            document.getElementById('func-1-desc').innerText = data.dom[1];
+            
+            document.getElementById('func-2-title').innerText = data.aux[0];
+            document.getElementById('func-2-desc').innerText = data.aux[1];
+            
+            document.getElementById('func-3-title').innerText = data.ter[0];
+            document.getElementById('func-3-desc').innerText = data.ter[1];
+            
+            document.getElementById('func-4-title').innerText = data.inf[0];
+            document.getElementById('func-4-desc').innerText = data.inf[1];
+
+            showScreen('result');
+        }
+
+        function resetTest() {
+            showScreen('intro');
+        }
+
+        showScreen('intro');
     </script>
 </body>
 </html>
