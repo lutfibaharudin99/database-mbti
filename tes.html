@@ -69,6 +69,28 @@
                 </div>
             </div>
 
+            <!-- Layar: Input Nama -->
+            <div id="screen-name-input" class="hidden text-center fade-enter">
+                <div class="mb-6 flex justify-center">
+                    <svg class="w-20 h-20 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-4">Siapa Namamu, Detektif?</h2>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Masukkan namamu untuk memulai observasi kognitif.
+                </p>
+                <div class="max-w-sm mx-auto mb-6">
+                    <input type="text" id="user-name" oninput="checkNameInput()" onkeypress="if(event.key==='Enter') submitName()" placeholder="Nama Lengkap" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800" required>
+                </div>
+                <div class="flex justify-center">
+                    <button onclick="submitName()" id="btn-submit-name" disabled class="px-8 py-3 bg-gray-300 text-gray-500 font-medium rounded-lg transition-colors shadow-md cursor-not-allowed">
+                        Lanjut ke Skenario
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <a href="index.html" class="text-blue-600 hover:underline text-sm">Kembali ke Beranda</a>
+                </div>
+            </div>
+
             <!-- Layar: Pertanyaan -->
             <div id="screen-question" class="hidden">
                 <div class="mb-2 text-sm font-semibold text-blue-600 uppercase tracking-wider" id="question-indicator">Pertanyaan 1 dari 4</div>
@@ -195,23 +217,48 @@
 
         // State aplikasi
         let currentQuestionIndex = 0;
+        let userName = '';
         let answers = [];
         let selectedOptionValue = null;
+        let userNameInput; // Declare globally to be accessible by checkNameInput
+        let btnSubmitName; // Declare globally
 
         // Elemen DOM
         const screenIntro = document.getElementById('screen-intro');
+        const screenNameInput = document.getElementById('screen-name-input'); // New: Get name input screen
         const screenQuestion = document.getElementById('screen-question');
         const screenResult = document.getElementById('screen-result');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
         const questionText = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
-        const btnNext = document.getElementById('btn-next');
         const questionIndicator = document.getElementById('question-indicator');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            userNameInput = document.getElementById('user-name');
+            btnSubmitName = document.getElementById('btn-submit-name');
+            showScreen('intro'); // Ensure intro screen is shown on load
+        });
+
+        // New: Function to enable/disable the submit name button
+        function checkNameInput() {
+            if (userNameInput.value.trim().length > 0) {
+                btnSubmitName.disabled = false;
+                btnSubmitName.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                btnSubmitName.classList.add('bg-blue-600', 'hover:bg-blue-700', 'text-white', 'shadow-md');
+            } else {
+                btnSubmitName.disabled = true;
+                btnSubmitName.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                btnSubmitName.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white', 'shadow-md');
+            }
+        }
+
+        const btnNext = document.getElementById('btn-next');
 
         // Navigasi Layar
         function showScreen(screen) {
             screenIntro.classList.add('hidden');
+            screenNameInput.classList.add('hidden');
             screenQuestion.classList.add('hidden');
             screenResult.classList.add('hidden');
             screenIntro.classList.remove('fade-enter-active');
@@ -220,6 +267,11 @@
                 screenIntro.classList.remove('hidden');
                 setTimeout(() => screenIntro.classList.add('fade-enter-active'), 10);
                 progressContainer.classList.add('hidden');
+            } else if (screen === 'name-input') {
+                screenNameInput.classList.remove('hidden');
+                setTimeout(() => screenNameInput.classList.add('fade-enter-active'), 10);
+                progressContainer.classList.add('hidden');
+                userNameInput.focus();
             } else if (screen === 'question') {
                 screenQuestion.classList.remove('hidden');
                 progressContainer.classList.remove('hidden');
@@ -233,8 +285,17 @@
         function startTest() {
             currentQuestionIndex = 0;
             answers = [];
-            loadQuestion();
-            showScreen('question');
+            showScreen('name-input');
+        }
+
+        // New: Function to submit name and proceed to questions
+        function submitName() {
+            const name = userNameInput.value.trim();
+            if (name.length > 0) {
+                userName = name;
+                loadQuestion();
+                showScreen('question');
+            }
         }
 
         function loadQuestion() {
@@ -338,14 +399,52 @@
             document.getElementById('func-4-title').innerText = data.inf[0];
             document.getElementById('func-4-desc').innerText = data.inf[1];
 
+            // Kirim data ke Google Sheets
+            kirimDataKeSheets(userName, answers, mbtiResult);
+
             showScreen('result');
         }
 
-        function resetTest() {
-            showScreen('intro');
+        // 1. Fungsi Utama untuk Kirim Data ke Google Sheets
+        async function kirimDataKeSheets(nama, jawabanArray, hasilMBTI) {
+            const scriptURL = "https://script.google.com/macros/s/AKfycbxb7Il9iSi3xgGNaJB_P7q8NkanehLwugZT28NIwvZlHMKjtgWgYJHBTx6On58aJdhcLQ/exec";
+            
+            // Mapping jawaban ke bentuk readable
+            const jawabanLengkap = {
+                reaksi_resign: jawabanArray[0] || '',
+                gaya_liburan: jawabanArray[1] || '',
+                cara_ngecharge: jawabanArray[2] || '',
+                perubahan_burnout: jawabanArray[3] || ''
+            };
+
+            const dataUntukDikirim = {
+                timestamp: new Date().toLocaleString('id-ID'),
+                nama_lengkap: nama,
+                reaksi_resign: jawabanLengkap.reaksi_resign,
+                gaya_liburan: jawabanLengkap.gaya_liburan,
+                cara_ngecharge: jawabanLengkap.cara_ngecharge,
+                perubahan_burnout: jawabanLengkap.perubahan_burnout,
+                hasil_mbti: hasilMBTI
+            };
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataUntukDikirim)
+                });
+                console.log("✓ Data terkirim ke spreadsheet!", dataUntukDikirim);
+            } catch (e) {
+                console.error("✗ Gagal kirim data!", e);
+            }
         }
 
-        showScreen('intro');
+        function resetTest() {
+            userNameInput.value = ''; // Clear the name input field
+            checkNameInput(); // Update button state after clearing
+            showScreen('intro');
+        }
     </script>
 </body>
 </html>

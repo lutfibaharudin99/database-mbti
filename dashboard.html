@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Detail Kandidat MBTI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menghilangkan tombol navigasi saat dicetak ke PDF */
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="max-w-2xl w-full bg-white shadow-xl rounded-3xl p-10 relative border border-slate-100">
+        
+        <div id="loading" class="text-center py-24">
+            <div class="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-indigo-600 mx-auto"></div>
+            <p class="mt-6 text-slate-500 font-medium animate-pulse">Menghubungkan ke Database...</p>
+        </div>
+
+        <div id="content" class="hidden">
+            
+            <div class="flex justify-between items-start mb-10">
+                <div class="flex-1">
+                    <h1 id="view-nama" class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none mb-3 uppercase">Nama Lengkap</h1>
+                    <div class="flex items-center gap-3">
+                        <span id="view-mbti" class="bg-indigo-600 text-white px-4 py-1.5 rounded-full text-lg font-black tracking-widest shadow-md">XXXX</span>
+                        <p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Hasil Analisis MBTI</p>
+                    </div>
+                </div>
+                <div class="text-right no-print">
+                    <span class="text-xs font-bold text-slate-300 uppercase block mb-1">Halaman</span>
+                    <span id="current-index" class="text-2xl font-black text-indigo-200">1</span>
+                    <span class="text-slate-200 text-lg"> / </span>
+                    <span id="total-data" class="text-slate-300 font-bold">0</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">1. Reaksi Resign</p>
+                        <p id="view-q1" class="text-slate-700 text-sm italic">-</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">2. Gaya Liburan</p>
+                        <p id="view-q2" class="text-slate-700 text-sm italic">-</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">3. Cara Recharge</p>
+                        <p id="view-q3" class="text-slate-700 text-sm italic">-</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">4. Saat Burnout</p>
+                        <p id="view-q4" class="text-slate-700 text-sm italic">-</p>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-2xl">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.364-6.364l-.707-.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <p class="text-xs font-black text-indigo-600 uppercase tracking-[0.2em]">Analisis Perilaku & Fungsi Kognitif</p>
+                    </div>
+                    <div id="view-perilaku" class="text-slate-700 text-sm leading-relaxed whitespace-pre-line">
+                        </div>
+                </div>
+            </div>
+
+            <div class="mt-12 flex justify-between items-center no-print pt-8 border-t border-slate-100">
+                <button onclick="prevData()" class="flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    PREV
+                </button>
+                
+                <button onclick="window.print()" class="text-slate-400 hover:text-indigo-600 font-bold text-xs tracking-widest transition-all">
+                    CETAK PDF
+                </button>
+
+                <button onclick="nextData()" class="flex items-center gap-2 px-7 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-100 transition-all active:scale-95">
+                    NEXT
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL yang kamu berikan
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxb7Il9iSi3xgGNaJB_P7q8NkanehLwugZT28NIwvZlHMKjtgWgYJHBTx6On58aJdhcLQ/exec";
+        let allData = [];
+        let currentIndex = 0;
+
+        async function loadDashboard() {
+            try {
+                const response = await fetch(scriptURL);
+                allData = await response.json();
+                
+                if (allData && allData.length > 0) {
+                    // Balik data agar yang terbaru muncul di halaman pertama
+                    allData.reverse(); 
+                    render(0);
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('content').classList.remove('hidden');
+                    document.getElementById('total-data').innerText = allData.length;
+                } else {
+                    document.getElementById('loading').innerHTML = "<p class='text-slate-400'>Belum ada data masuk.</p>";
+                }
+            } catch (error) {
+                console.error("Gagal ambil data:", error);
+                document.getElementById('loading').innerHTML = "<p class='text-red-500 font-bold'>Gagal Memuat Data.</p>";
+            }
+        }
+
+        function render(index) {
+            const item = allData[index];
+            
+            // Header Utama
+            document.getElementById('view-nama').innerText = item.nama_lengkap || 'TANPA NAMA';
+            document.getElementById('view-mbti').innerText = item.hasil_mbti || 'N/A';
+            
+            // Jawaban Tes
+            document.getElementById('view-q1').innerText = item.penjelasan1 || '-';
+            document.getElementById('view-q2').innerText = item.penjelasan2 || '-';
+            document.getElementById('view-q3').innerText = item.penjelasan3 || '-';
+            document.getElementById('view-q4').innerText = item.penjelasan4 || '-';
+            
+            // Kolom Baru: Perilaku (Mendalam)
+            // Menggunakan innerHTML agar jika ada baris baru di spreadsheet tetap rapi
+            document.getElementById('view-perilaku').innerText = item.perilaku || 'Data perilaku belum dianalisis.';
+            
+            document.getElementById('current-index').innerText = index + 1;
+        }
+
+        function nextData() {
+            if (currentIndex < allData.length - 1) {
+                currentIndex++;
+                render(currentIndex);
+            }
+        }
+
+        function prevData() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                render(currentIndex);
+            }
+        }
+
+        // Inisialisasi pengambilan data saat halaman dibuka
+        loadDashboard();
+    </script>
+</body>
+</html>
